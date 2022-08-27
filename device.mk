@@ -26,7 +26,7 @@ PRODUCT_PACKAGES += \
     qcom_decrypt_fbe
 
 # Screen
-TARGET_SCREEN_HEIGHT := 2246
+TARGET_SCREEN_HEIGHT := 2248
 TARGET_SCREEN_WIDTH := 1080
 
 # TWRP Configuration

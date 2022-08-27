@@ -25,7 +25,7 @@
 # *not* include it on all devices, so it is safe even with hardware-specific
 # components.
 
-DEVICE_PATH := device/xiaomi/beryllium
+DEVICE_PATH := device/xiaomi/dipper
 
 # Android Verified Boot
 BOARD_AVB_ENABLE := false
@@ -73,10 +73,10 @@ BOARD_RAMDISK_OFFSET     := 0x01000000
 NEED_KERNEL_MODULE_SYSTEM := true
 
 TARGET_KERNEL_ARCH := arm64
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/Image.gz-dtb
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
 
 # OTA
-TARGET_OTA_ASSERT_DEVICE := beryllium
+TARGET_OTA_ASSERT_DEVICE := dipper
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 262144
