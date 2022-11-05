@@ -1,6 +1,8 @@
 #
 # Copyright 2016 The Android Open Source Project
 #
+# Copyright (C) 2019-2022 OrangeFox Recovery Project
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -25,6 +27,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-ifneq ($(filter beryllium,$(TARGET_DEVICE)),)
+ifneq ($(filter dipper,$(TARGET_DEVICE)),)
 include $(call all-makefiles-under,$(LOCAL_PATH))
 endif
