@@ -20,7 +20,6 @@
 
 #if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
         export FOX_ENABLE_APP_MANAGER=1
-        export FOX_R11=1
         export OF_DISABLE_MIUI_OTA_BY_DEFAULT=1
   	export OF_HIDE_NOTCH=1
 	export OF_CLOCK_POS=1
