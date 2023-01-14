@@ -1,7 +1,7 @@
 #
 # Copyright (C) 2021 The TeamWin Recovery Project
 #
-# Copyright (C) 2019-2022 OrangeFox Recovery Project
+# Copyright (C) 2019-2023 OrangeFox Recovery Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.system.keystore2
 
-# recovery onfiguration
+# recovery configuration
 TW_THEME := portrait_hdpi
 RECOVERY_SDCARD_ON_DATA := true
 BOARD_HAS_NO_REAL_SDCARD := true
@@ -160,4 +160,7 @@ endif
 # Inherit from the device-specific device.mk (if it exists) as the last in the chain
 $(call inherit-product-if-exists, $(DEVICE_PATH)/device.mk)
 
+#
+TW_MAX_BRIGHTNESS := 255
+TW_DEFAULT_BRIGHTNESS := 120
 #
