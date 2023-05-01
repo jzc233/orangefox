@@ -81,7 +81,7 @@ TW_INCLUDE_FBE_METADATA_DECRYPT := true
 BOARD_USES_METADATA_PARTITION := true
 
 # version
-PLATFORM_VERSION := 16.1.0
+PLATFORM_VERSION := 99.87.36
 PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 
 # security patch
@@ -130,9 +130,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.fastbootd.available=true \
 	ro.boot.dynamic_partitions=true \
 	ro.boot.dynamic_partitions_retrofit=true
-#
-#   TW_MAX_BRIGHTNESS := 255
-#   TW_DEFAULT_BRIGHTNESS := 120
 else
    # keymaster-4.0 build
    ifeq ($(FOX_USE_KEYMASTER_4),1)
@@ -157,10 +154,10 @@ PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(DEVICE_PATH)/recovery/root/,$(TARGET_COPY_OUT_RECOVERY)/root/)
 endif
 
-# Inherit from the device-specific device.mk (if it exists) as the last in the chain
-$(call inherit-product-if-exists, $(DEVICE_PATH)/device.mk)
-
 #
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 120
+
+# Inherit from the device-specific device.mk (if it exists) as the last in the chain
+$(call inherit-product-if-exists, $(DEVICE_PATH)/device.mk)
 #
