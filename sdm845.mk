@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022 The OrangeFox Recovery Project
+# Copyright (C) 2022-2024 The OrangeFox Recovery Project
 #
 #	OrangeFox is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -25,6 +25,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
 # Inherit from the sdm845-common device makefile
 $(call inherit-product, $(SDM845_COMMON_PATH)/device_common.mk)
+
+# Inherit any OrangeFox-specific settings
+$(call inherit-product-if-exists, $(SDM845_COMMON_PATH)/fox_sdm845.mk)
 
 # Inherit from twrp common
 $(call inherit-product, vendor/twrp/config/common.mk)
