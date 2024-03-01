@@ -1,7 +1,7 @@
 #
 # Copyright (C) 2021 The TeamWin Recovery Project
 #
-# Copyright (C) 2019-2023 OrangeFox Recovery Project
+# Copyright (C) 2019-2024 OrangeFox Recovery Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 
 # APEX
-# Enable updating of APEXes
-$(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
-
 PRODUCT_COMPRESSED_APEX := false
 
 TW_EXCLUDE_APEX := true
+
+# Enable updating of APEXes
+$(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 
 # Keymaster
 PRODUCT_PACKAGES += \
@@ -70,8 +70,12 @@ TARGET_USES_MKE2FS := true
 TW_SCREEN_BLANK_ON_BOOT := true
 
 # brightness for lineage-based kernels
-TW_MAX_BRIGHTNESS := 1023
-TW_DEFAULT_BRIGHTNESS := 450
+#TW_MAX_BRIGHTNESS := 1023
+#TW_DEFAULT_BRIGHTNESS := 450
+
+# brightness for PE-based kernels
+TW_MAX_BRIGHTNESS := 255
+TW_DEFAULT_BRIGHTNESS := 120
 
 # Crypto
 TW_INCLUDE_CRYPTO := true
@@ -109,6 +113,9 @@ PRODUCT_SOONG_NAMESPACES += \
 PRODUCT_EXTRA_RECOVERY_KEYS += \
     vendor/recovery/security/miui
 
+# keymaster version
+OF_DEFAULT_KEYMASTER_VERSION := 4.0
+
 # dynamic partitions?
 ifeq ($(FOX_USE_DYNAMIC_PARTITIONS),1)
   PRODUCT_USE_DYNAMIC_PARTITIONS := true
@@ -127,16 +134,25 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.1-service
 
 PRODUCT_PROPERTY_OVERRIDES += \
+	ro.orangefox.dynamic.build=true \
 	ro.fastbootd.available=true \
 	ro.boot.dynamic_partitions=true \
 	ro.boot.dynamic_partitions_retrofit=true
 else
+PRODUCT_PROPERTY_OVERRIDES += \
+   ro.orangefox.dynamic.build=false
+
    # keymaster-4.0 build
    ifeq ($(FOX_USE_KEYMASTER_4),1)
-        PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.fox.keymaster_version=4
+        PRODUCT_PROPERTY_OVERRIDES += \
+        	ro.fox.keymaster_version=4
    else
-        PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.fox.keymaster_version=3
+	# change keymaster version to 3.0
+	OF_DEFAULT_KEYMASTER_VERSION := 3.0
+        PRODUCT_PROPERTY_OVERRIDES += \
+        	ro.fox.keymaster_version=3
    endif
+
 endif
 #
 
@@ -154,10 +170,12 @@ PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(DEVICE_PATH)/recovery/root/,$(TARGET_COPY_OUT_RECOVERY)/root/)
 endif
 
-#
-TW_MAX_BRIGHTNESS := 255
-TW_DEFAULT_BRIGHTNESS := 120
-
 # Inherit from the device-specific device.mk (if it exists) as the last in the chain
 $(call inherit-product-if-exists, $(DEVICE_PATH)/device.mk)
+
+# initial prop for variant
+ifneq ($(FOX_VARIANT),)
+  PRODUCT_PROPERTY_OVERRIDES += \
+	ro.orangefox.variant=$(FOX_VARIANT)
+endif
 #

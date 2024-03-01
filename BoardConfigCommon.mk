@@ -106,56 +106,6 @@ BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 
-ifeq ($(FOX_USE_DYNAMIC_PARTITIONS),1)
-# dynamic partitioning (PE13, keymaster4)
-  BOARD_SUPER_PARTITION_GROUPS := xiaomi845_dynamic_partitions
-  BOARD_XIAOMI845_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor
-  BOARD_SUPER_PARTITION_SIZE := 4294967296
-  BOARD_SUPER_PARTITION_METADATA_DEVICE := system
-  BOARD_SUPER_PARTITION_BLOCK_DEVICES := system vendor
-  BOARD_SUPER_PARTITION_SYSTEM_DEVICE_SIZE := 3221225472
-  BOARD_SUPER_PARTITION_VENDOR_DEVICE_SIZE := 1073741824
-
-  # 4 MB metadata size
-  BOARD_XIAOMI845_DYNAMIC_PARTITIONS_SIZE := 4290772992
-  
-  ifneq ($(FOX_OVERRIDE_DEFAULT_FSTAB),true)
-  	TARGET_RECOVERY_FSTAB := $(SDM845_COMMON_PATH)/recovery/fstab_files/recovery-dynamic.fstab
-  	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/fstab_files/twrp-dynamic.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags
-  endif
-
-  # keymaster 4.0 for dynamic partitions too
-  PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster4/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
-  PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster4/android.hardware.keymaster@4.0-service-qti:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.keymaster@4.0-service-qti
-else
-# static partitioning
-  BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472
-  BOARD_VENDORIMAGE_PARTITION_SIZE := 788529152
-  BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
-  #
-  ifeq ($(FOX_USE_KEYMASTER_4),1)
-    PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster4/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
-    PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster4/android.hardware.keymaster@4.0-service-qti:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.keymaster@4.0-service-qti
-    ifneq ($(FOX_OVERRIDE_DEFAULT_FSTAB),true)
-    	TARGET_RECOVERY_FSTAB := $(SDM845_COMMON_PATH)/recovery/fstab_files/recovery-km4.fstab
-    	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/fstab_files/twrp-km4.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags
-    endif
-  else
-    BOARD_VENDORIMAGE_PARTITION_SIZE := 1073741824
-    BOARD_SYSTEM_EXTIMAGE_PARTITION_SIZE := 872415232
-    BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
-    TARGET_COPY_OUT_SYSTEM_EXT := system_ext
-    PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster3/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
-    PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster3/android.hardware.keymaster@3.0-service-qti:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.keymaster@3.0-service-qti
-    ifneq ($(FOX_OVERRIDE_DEFAULT_FSTAB),true)
-    	TARGET_RECOVERY_FSTAB := $(SDM845_COMMON_PATH)/recovery/fstab_files/recovery-km3.fstab
-    	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/fstab_files/twrp-km3.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags
-    endif
-  endif
-  #
-endif
-#
-
 TARGET_COPY_OUT_VENDOR := vendor
 BOARD_ROOT_EXTRA_FOLDERS := bluetooth dsp firmware persist
 BOARD_SUPPRESS_SECURE_ERASE := true
@@ -185,6 +135,9 @@ BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
 BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
 BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
 
+# frame rate
+TW_FRAMERATE := 120
+
 # FDE
 ifeq ($(FOX_ENABLE_SDM845_FDE),true)
   TARGET_HW_DISK_ENCRYPTION := true
@@ -194,4 +147,78 @@ ifeq ($(FOX_ENABLE_SDM845_FDE),true)
   TARGET_RECOVERY_DEVICE_MODULES += libcryptfs_hw
   RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libcryptfs_hw.so
 endif
+
+# dynamic partitioning? (PE13, keymaster4)
+ifeq ($(FOX_USE_DYNAMIC_PARTITIONS),1)
+  BOARD_SUPER_PARTITION_GROUPS := xiaomi845_dynamic_partitions
+  BOARD_XIAOMI845_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor
+  BOARD_SUPER_PARTITION_SIZE := 4294967296
+  BOARD_SUPER_PARTITION_METADATA_DEVICE := system
+  BOARD_SUPER_PARTITION_BLOCK_DEVICES := system vendor
+  BOARD_SUPER_PARTITION_SYSTEM_DEVICE_SIZE := 3221225472
+  BOARD_SUPER_PARTITION_VENDOR_DEVICE_SIZE := 1073741824
+
+  # 4 MB metadata size
+  BOARD_XIAOMI845_DYNAMIC_PARTITIONS_SIZE := 4290772992
+  
+  ifneq ($(FOX_OVERRIDE_DEFAULT_FSTAB),true)
+  	TARGET_RECOVERY_FSTAB := $(SDM845_COMMON_PATH)/recovery/fstab_files/recovery-dynamic.fstab
+  	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/fstab_files/twrp-dynamic.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags
+  endif
+
+  # keymaster 4.0 for dynamic partitions
+  PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster4/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
+
+#  # copy recovery/fstab_files/ from the common  directory (if it exists)
+#  ifneq ($(wildcard $(SDM845_COMMON_PATH)/recovery/fstab_files/.),)
+#    PRODUCT_COPY_FILES += \
+#        $(call find-copy-subdir-files,*,$(SDM845_COMMON_PATH)/recovery/fstab_files/*,$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/)
+#  endif
+
+#  # copy recovery/fstab_files/ from the device directory (if it exists)
+#  ifneq ($(wildcard $(DEVICE_PATH)/recovery/fstab_files/.),)
+#    PRODUCT_COPY_FILES += \
+#        $(call find-copy-subdir-files,*,$(DEVICE_PATH)/recovery/fstab_files/*,$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/)
+#  endif
+
+else
+  # we have static partitioning
+  BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472
+  BOARD_VENDORIMAGE_PARTITION_SIZE := 788529152
+  BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
+  
+  # static with keymaster4
+  ifeq ($(FOX_USE_KEYMASTER_4),1)
+    PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster4/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
+    ifneq ($(FOX_OVERRIDE_DEFAULT_FSTAB),true)
+    	TARGET_RECOVERY_FSTAB := $(SDM845_COMMON_PATH)/recovery/fstab_files/recovery-km4.fstab
+    	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/fstab_files/twrp-km4.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags
+    endif
+  else
+    BOARD_VENDORIMAGE_PARTITION_SIZE := 1073741824
+    BOARD_SYSTEM_EXTIMAGE_PARTITION_SIZE := 872415232
+    BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
+    TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+    PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster3/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
+    ifneq ($(FOX_OVERRIDE_DEFAULT_FSTAB),true)
+    	TARGET_RECOVERY_FSTAB := $(SDM845_COMMON_PATH)/recovery/fstab_files/recovery-non-dynamic.fstab
+    	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/fstab_files/twrp-non-dynamic.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags
+    endif
+  endif
+ #
+endif
+
+# --------------------------------------------------
+# copy recovery/fstab_files/ from the common  directory (if it exists)
+ifneq ($(wildcard $(SDM845_COMMON_PATH)/recovery/fstab_files/.),)
+    PRODUCT_COPY_FILES += \
+        $(call find-copy-subdir-files,*,$(SDM845_COMMON_PATH)/recovery/fstab_files/*,$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/)
+endif
+
+# copy recovery/fstab_files/ from the device directory (if it exists)
+ifneq ($(wildcard $(DEVICE_PATH)/recovery/fstab_files/.),)
+    PRODUCT_COPY_FILES += \
+        $(call find-copy-subdir-files,*,$(DEVICE_PATH)/recovery/fstab_files/*,$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/)
+endif
+# --------------------------------------------------
 #
