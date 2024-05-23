@@ -69,13 +69,15 @@ TARGET_USES_LOGD := true
 TARGET_USES_MKE2FS := true
 TW_SCREEN_BLANK_ON_BOOT := true
 
-# brightness for lineage-based kernels
-#TW_MAX_BRIGHTNESS := 1023
-#TW_DEFAULT_BRIGHTNESS := 450
-
-# brightness for PE-based kernels
-TW_MAX_BRIGHTNESS := 255
-TW_DEFAULT_BRIGHTNESS := 120
+# brightness for polaris kernels
+ifeq ($(PRODUCT_RELEASE_NAME),polaris)
+   TW_MAX_BRIGHTNESS := 4095
+   TW_DEFAULT_BRIGHTNESS := 640
+else
+# brightness for dipper kernels
+   TW_MAX_BRIGHTNESS := 255
+   TW_DEFAULT_BRIGHTNESS := 120
+endif
 
 # Crypto
 TW_INCLUDE_CRYPTO := true
