@@ -31,7 +31,7 @@
 	export FOX_BUGGED_AOSP_ARB_WORKAROUND="1230768000"; # set build date to Jan 1 2009 00:00:00
 
 	# magisk addon
-	export FOX_USE_SPECIFIC_MAGISK_ZIP=~/Magisk/Magisk-v26.4.zip
+	export FOX_USE_SPECIFIC_MAGISK_ZIP=~/Magisk/Magisk-v27.0.zip
 
     	# dynamic partitions ?
     	export FOX_USE_DYNAMIC_PARTITIONS=1; # make all builds dynamic
