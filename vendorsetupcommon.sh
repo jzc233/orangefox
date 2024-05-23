@@ -18,6 +18,19 @@
 # 	Please maintain this if you use this script or any part of it
 #
 
+fetch_sdm845_common_repo() {
+	local URL=https://gitlab.com/OrangeFox/device/sdm845-common.git;
+	local common=device/xiaomi/sdm845-common;
+	local branch=fox_12.1;
+
+	if [ ! -d $common ]; then
+		echo "Cloning $URL ... to $common";
+		git clone $URL -b $branch $common;
+	else
+		echo "Device common repository: \"$common\" found ...";
+	fi
+}
+
 #if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
         export FOX_ENABLE_APP_MANAGER=1
 	export FOX_USE_BASH_SHELL=1
