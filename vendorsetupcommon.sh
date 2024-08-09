@@ -30,7 +30,6 @@
 	export FOX_USE_SED_BINARY=1
 	export FOX_USE_XZ_UTILS=1
 	export FOX_DELETE_AROMAFM=1
-	export FOX_BUGGED_AOSP_ARB_WORKAROUND="1230768000"; # set build date to Jan 1 2009 00:00:00
 	export OF_PATCH_AVB20=1
 
 	# magisk addon
