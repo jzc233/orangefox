@@ -53,11 +53,18 @@ format_metadata() {
 	[ -z "$PART" ] && return; # no valid block - bale out
 
 	# now proceed
-	umount $META &> /dev/null;
+	umount $META; # &> /dev/null;
+	if [ "$?" != "0" ]; then
+		LOGMSG "Error unmounting $META";
+	fi
 
 	LOGMSG "Formatting $META ...";
 	mke2fs -t ext4 -b 4096 $PART;
-	e2fsdroid -e -S /file_contexts -a $META $PART;
+	if [ "$?" = "0" ]; then
+		e2fsdroid -e -S /file_contexts -a $META $PART;
+	else
+		LOGMSG "Formatting $META - error creating the filesystem ...";
+	fi
 }
 
 # ---

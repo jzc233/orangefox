@@ -1,7 +1,7 @@
 #!/system/bin/sh
 #
 #	This file is part of the OrangeFox Recovery Project
-# 	Copyright (C) 2018-2023 The OrangeFox Recovery Project
+# 	Copyright (C) 2018-2024 The OrangeFox Recovery Project
 #	
 #	OrangeFox is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ format_dynamic() {
 	make_f2fs -g android -f /dev/block/bootdevice/by-name/cache;
 	# /metadata, mounted on "cust"
 	mke2fs -t ext4 -b 4096 /dev/block/bootdevice/by-name/cust;
-	e2fsdroid -e -S /file_contexts -a /metadata /dev/block/bootdevice/by-name/cust;
+	[ "$?" = "0" ] && e2fsdroid -e -S /file_contexts -a /metadata /dev/block/bootdevice/by-name/cust;
 }
 
 process_partitions() {
