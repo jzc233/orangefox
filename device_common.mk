@@ -75,8 +75,8 @@ ifeq ($(PRODUCT_RELEASE_NAME),polaris)
    TW_DEFAULT_BRIGHTNESS := 640
 else
 # brightness for dipper kernels
-   TW_MAX_BRIGHTNESS := 255
-   TW_DEFAULT_BRIGHTNESS := 120
+   TW_MAX_BRIGHTNESS := 2047
+   TW_DEFAULT_BRIGHTNESS := 511
 endif
 
 # Crypto
