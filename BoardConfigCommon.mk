@@ -235,4 +235,6 @@ ifneq ($(wildcard $(DEVICE_PATH)/recovery/fstab_files/.),)
         $(call find-copy-subdir-files,*,$(DEVICE_PATH)/recovery/fstab_files/*,$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/)
 endif
 # --------------------------------------------------
+
+TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 #
