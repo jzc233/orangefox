@@ -115,14 +115,10 @@ PRODUCT_SOONG_NAMESPACES += \
 PRODUCT_EXTRA_RECOVERY_KEYS += \
     vendor/recovery/security/miui
 
-# keymaster version
-OF_DEFAULT_KEYMASTER_VERSION := 4.0
-
 # dynamic partitions?
 ifeq ($(FOX_USE_DYNAMIC_PARTITIONS),1)
   PRODUCT_USE_DYNAMIC_PARTITIONS := true
   PRODUCT_RETROFIT_DYNAMIC_PARTITIONS := true
-  PRODUCT_DEFAULT_PROPERTY_OVERRIDES += ro.fox.keymaster_version=4
 
 TW_INCLUDE_FASTBOOTD := true
 PRODUCT_PACKAGES += \
@@ -141,26 +137,18 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.boot.dynamic_partitions=true \
 	ro.boot.dynamic_partitions_retrofit=true
 else
-PRODUCT_PROPERTY_OVERRIDES += \
-   ro.orangefox.dynamic.build=false
-
-   # keymaster-4.0 build
-   ifeq ($(FOX_USE_KEYMASTER_4),1)
-        PRODUCT_PROPERTY_OVERRIDES += \
-        	ro.fox.keymaster_version=4
-   else
-	# change keymaster version to 3.0
-	OF_DEFAULT_KEYMASTER_VERSION := 3.0
-        PRODUCT_PROPERTY_OVERRIDES += \
-        	ro.fox.keymaster_version=3
-   endif
-
+	PRODUCT_PROPERTY_OVERRIDES += ro.orangefox.dynamic.build=false
 endif
-#
 
-# anti-rollback; set build date to Jan 1 2009 00:00:00
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.build.date.utc=1230768000
+# keymaster-4.0 build
+ifeq ($(FOX_USE_KEYMASTER_4),1)
+	OF_DEFAULT_KEYMASTER_VERSION := 4.0
+	PRODUCT_PROPERTY_OVERRIDES += ro.fox.keymaster_version=4
+else
+# default keymaster=3.0
+	OF_DEFAULT_KEYMASTER_VERSION := 3.0
+	PRODUCT_PROPERTY_OVERRIDES += ro.fox.keymaster_version=3
+endif
 
 # copy recovery/root/ from the common directory
 PRODUCT_COPY_FILES += \
