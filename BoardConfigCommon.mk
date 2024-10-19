@@ -55,7 +55,22 @@ TARGET_NO_BOOTLOADER := true
 NEED_KERNEL_MODULE_SYSTEM := true
 TARGET_KERNEL_ARCH := arm64
 
-BOARD_KERNEL_CMDLINE  := console=ttyMSM0,115200n8 earlycon=msm_geni_serial,0xA84000 androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.usbcontroller=a600000.dwc3 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 msm_rtb.filter=0x237 service_locator.enable=1 swiotlb=2048 loop.max_part=7 androidboot.configfs=true androidboot.boot_devices=soc/1d84000.ufshc buildvariant=userdebug androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := \
+	console=ttyMSM0,115200n8 \
+	earlycon=msm_geni_serial,0xA84000 \
+	androidboot.hardware=qcom \
+	androidboot.console=ttyMSM0 \
+	androidboot.usbcontroller=a600000.dwc3 \
+	ehci-hcd.park=3 \
+	lpm_levels.sleep_disabled=1 \
+	msm_rtb.filter=0x237 \
+	service_locator.enable=1 \
+	swiotlb=2048 \
+	loop.max_part=7 \
+	androidboot.configfs=true \
+	androidboot.boot_devices=soc/1d84000.ufshc \
+	androidboot.selinux=permissive
+
 # dynamic
 ifeq ($(FOX_USE_DYNAMIC_PARTITIONS),1)
   BOARD_KERNEL_CMDLINE += androidboot.super_partition=system
