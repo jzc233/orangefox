@@ -40,15 +40,13 @@
 		export FOX_VARIANT="unified"
 		export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"
 		export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
-		export FOX_USE_KEYMASTER_4=1
-
-		# dispense with MIUI stuff
 		export FOX_VANILLA_BUILD=1
-	else
-		if [ "$FOX_USE_KEYMASTER_4" = "1" ]; then
-			export FOX_VANILLA_BUILD=1
-		   	export FOX_VARIANT="keymaster4"
-		fi
+	fi
+
+	##export FOX_USE_KEYMASTER_4=1; # only used by PE
+	if [ "$FOX_USE_KEYMASTER_4" = "1" ]; then
+		export FOX_VANILLA_BUILD=1
+		export FOX_VARIANT="keymaster4"
 	fi
 #fi
 #
