@@ -105,8 +105,16 @@ BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_ODMIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
 
 TARGET_COPY_OUT_VENDOR := vendor
+TARGET_COPY_OUT_PRODUCT := product
+TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+TARGET_COPY_OUT_ODM := odm
+
 BOARD_ROOT_EXTRA_FOLDERS := bluetooth dsp firmware persist
 BOARD_SUPPRESS_SECURE_ERASE := true
 TARGET_USES_UEFI := true
@@ -148,26 +156,32 @@ ifeq ($(FOX_ENABLE_SDM845_FDE),true)
   RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libcryptfs_hw.so
 endif
 
-# dynamic partitioning? (PE13, keymaster4)
+# dynamic build? (now default)
 ifeq ($(FOX_USE_DYNAMIC_PARTITIONS),1)
-  BOARD_SUPER_PARTITION_GROUPS := xiaomi845_dynamic_partitions
-  BOARD_XIAOMI845_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor
   BOARD_SUPER_PARTITION_SIZE := 4294967296
+  BOARD_SUPER_PARTITION_SIZE := 5167382528
   BOARD_SUPER_PARTITION_METADATA_DEVICE := system
   BOARD_SUPER_PARTITION_BLOCK_DEVICES := system vendor
+  BOARD_SUPER_PARTITION_BLOCK_DEVICES := system vendor cust
   BOARD_SUPER_PARTITION_SYSTEM_DEVICE_SIZE := 3221225472
   BOARD_SUPER_PARTITION_VENDOR_DEVICE_SIZE := 1073741824
+  BOARD_SUPER_PARTITION_CUST_DEVICE_SIZE := 872415232
 
-  # 4 MB metadata size
-  BOARD_XIAOMI845_DYNAMIC_PARTITIONS_SIZE := 4290772992
-  
+  BOARD_SUPER_PARTITION_GROUPS := xiaomi845_dynamic_partitions
+  BOARD_XIAOMI845_DYNAMIC_PARTITIONS_PARTITION_LIST := odm product system system_ext vendor
+  BOARD_XIAOMI845_DYNAMIC_PARTITIONS_SIZE := 5163188224 ## (BOARD_SUPER_PARTITION_SIZE - 4194304) 4MiB overhead
+
   ifneq ($(FOX_OVERRIDE_DEFAULT_FSTAB),true)
   	TARGET_RECOVERY_FSTAB := $(SDM845_COMMON_PATH)/recovery/fstab_files/recovery-dynamic.fstab
   	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/fstab_files/twrp-dynamic.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags
   endif
 
-  # keymaster 4.0 for dynamic partitions
-  PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster4/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
+  # keymaster 4.0
+  ifeq ($(FOX_USE_KEYMASTER_4),1)
+  	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster4/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
+  else
+  	PRODUCT_COPY_FILES += $(SDM845_COMMON_PATH)/recovery/keymaster3/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
+  endif
 
 #  # copy recovery/fstab_files/ from the common  directory (if it exists)
 #  ifneq ($(wildcard $(SDM845_COMMON_PATH)/recovery/fstab_files/.),)
