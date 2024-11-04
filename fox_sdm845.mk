@@ -35,7 +35,7 @@ endif
 OF_HIDE_NOTCH := 1
 OF_CLOCK_POS := 1
 OF_CLASSIC_LEDS_FUNCTION := 1
-OF_USE_LZMA_COMPRESSION := 1
+#OF_USE_LZMA_COMPRESSION := 1
 OF_USE_GREEN_LED := 0
 
 # patch avb20 - some ROM recoveries try to overwrite custom recoveries
