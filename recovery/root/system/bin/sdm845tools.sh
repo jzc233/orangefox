@@ -51,7 +51,7 @@ local v=$(getprop "ro.orangefox.variant");
 # report whether the installed ROM has dynamic partitions
 rom_has_dynamic_partitions() {
   local BUILD_DEVICE="xiaomi845"; # the device that we are building for
-  local markers=""$BUILD_DEVICE"_dynamic_partitions "$BUILD_DEVICE"_dynpart xiaomi_dynamic_partitions qti_dynamic_partitions xiaomi_dynpart qti_dynpart";
+  local markers="qti_dynamic_partitions "$BUILD_DEVICE"_dynamic_partitions "$BUILD_DEVICE"_dynpart xiaomi_dynamic_partitions xiaomi_dynpart qti_dynpart";
   local F=/tmp/blck_tmp;
   dd if=/dev/block/by-name/system bs=256k count=1 of=$F;
   strings $F | grep dyn > "$F.txt";
